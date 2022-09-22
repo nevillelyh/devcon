@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -euo pipefail
+
+bindir="$(dirname "$(readlink -f "$0")")"
+basedir="$(readlink -f "$bindir/..")"
+project="$(basename "$basedir")"
+
+if [ $# -eq 0 ]; then
+    echo "Usage: shell <SERVICE> [ARG]..."
+    echo "    Services:"
+    for service in $(docker ps --format "{{.Names}}" | grep "^$project-.\+-1" | sed "s/^$project-\(.*\)-1/\1/g" | sort); do
+        echo "        $service"
+    done
+    exit 1
+fi
+
+service="$1"
+shift
+docker exec -it "$project-$service-1" /bin/bash "$@"
