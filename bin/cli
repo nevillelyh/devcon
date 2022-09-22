@@ -54,10 +54,23 @@ mysql() {
         "$@"
 }
 
+trino() {
+    tag="trinodb/trino:latest"
+    docker run -it --rm --name "trino-$ts" --network "$net" \
+        --user "$(id --user)" \
+        --env HOME=/home/trino \
+        --workdir /home/trino \
+        --volume "$basedir/home:/home/trino:rw" \
+        "$tag" \
+        trino --server="http://trino.devcon.io:8080" \
+        "$@"
+}
+
 case "$cli" in
     beeline) beeline "$@" ;;
     mc) mc "$@" ;;
     mysql) mysql "$@" ;;
+    trino) trino "$@" ;;
     *)
         echo "Unknown command: $cli"
         exit 1

@@ -1,0 +1,12 @@
+services:
+  trino:
+    image: trinodb/trino:latest
+    hostname: trino.devcon.io
+    ports:
+      - 8080:8080
+    volumes:
+      - ./trino:/trino:ro
+      - ./conf.sh:/conf.sh:ro
+      - ./init:/init:ro
+    user: "${uid}:${gid}"
+    command: /init/trino.sh
