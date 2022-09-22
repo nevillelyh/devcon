@@ -1,0 +1,19 @@
+services:
+  mysql:
+    image: mysql:latest
+    hostname: mysql.devcon.io
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlpass
+    command: --bind-address=0.0.0.0
+
+  mysql-init:
+    image: mysql:latest
+    depends_on:
+      - mysql
+    hostname: mysql-init.devcon.io
+    volumes:
+      - ./conf.sh:/conf.sh:ro
+      - ./init:/init:ro
+    command: /init/mysql.sh

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -euo pipefail
+
+bindir="$(dirname "$(readlink -f "$0")")"
+basedir="$(readlink -f "$bindir/..")"
+
+cd "$basedir"
+source conf.sh
+
+args=()
+for service in "${SERVICES[@]}"; do
+    yaml="$service.yaml"
+    if [[ ! -f "$yaml" ]]; then
+        echo "File not found: $yaml"
+        exit 1
+    fi
+    args+=("-f" "$yaml")
+done
+
+uid=$(id -u)
+gid=$(id -g)
+export uid
+export gid
+
+docker compose "${args[@]}" "$@"

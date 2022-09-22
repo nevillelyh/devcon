@@ -1,0 +1,21 @@
+services:
+  minio:
+    image: minio/minio:latest
+    hostname: minio.devcon.io
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - ./data/minio:/data:rw
+    user: "${uid}:${gid}"
+    command: server /data --console-address ":9001"
+  mc:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    hostname: mc.devcon.io
+    volumes:
+      - ./conf.sh:/conf.sh:ro
+      - ./init:/init:ro
+    entrypoint: /bin/bash
+    command: /init/minio.sh
