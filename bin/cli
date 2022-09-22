@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -euo pipefail
+
+cli="$(basename "$0")"
+bindir="$(dirname "$(readlink -f "$0")")"
+basedir="$(readlink -f "$bindir/..")"
+project="$(basename "$basedir")"
+net="${project}_default"
+ts=$(date "+%Y%m%d%H%M%S")
+
+mc() {
+    tag="minio/mc:latest"
+    docker run -it --rm --name "mc-$ts" --network="$net" \
+        --user "$(id --user)" \
+        --env HOME=/home/devcon \
+        --workdir /home/devcon \
+        --volume "$basedir/home:/home/devcon:rw" \
+        "$tag" \
+        "$@"
+}
+
+mysql() {
+    tag="mysql:latest"
+    docker run -it --rm --name "mysql-$ts" --network "$net" \
+        --user "$(id --user)" \
+        --env HOME=/home/devcon \
+        --workdir /home/devcon \
+        --volume "$basedir/home:/home/devcon:rw" \
+        "$tag" \
+        mysql --host="mysql.devcon.io" \
+        --user=root --password=mysqlpass \
+        "$@"
+}
+
+case "$cli" in
+    mc) mc "$@" ;;
+    mysql) mysql "$@" ;;
+    *)
+        echo "Unknown command: $cli"
+        exit 1
+        ;;
+esac
