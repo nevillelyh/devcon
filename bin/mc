@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -euo pipefail
+
+bindir="$(dirname "$(readlink -f "$0")")"
+basedir="$(readlink -f "$bindir/..")"
+project="$(basename "$basedir")"
+net="${project}_default"
+ts=$(date '+%Y%m%d%H%M%S')
+
+tag="minio/mc:latest"
+docker run -it --rm --name "mc-$ts" --network="$net" \
+    --user "$(id --user)" \
+    --env HOME=/home/devcon \
+    --workdir /home/devcon \
+    --volume "$basedir:/home/devcon:rw" \
+    "$tag" \
+    "$@"
