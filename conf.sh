@@ -5,6 +5,7 @@ SERVICES=(minio mysql metastore-hive metastore-iceberg trino)
 
 MINIO_BUCKETS=(hive iceberg)
 
-MYSQL_DATABASES=(hive iceberg trino)
+MYSQL_PRIVATE_DATABASES=(hive iceberg)
+MYSQL_PUBLIC_DATABASES=(tpcds tpch)
 
 TRINO_CATALOGS=(hive iceberg mysql)
