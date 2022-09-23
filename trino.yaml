@@ -8,5 +8,4 @@ services:
       - ./trino:/trino:ro
       - ./conf.sh:/conf.sh:ro
       - ./init:/init:ro
-    user: "${uid}:${gid}"
     command: /init/trino.sh

@@ -33,7 +33,7 @@ beeline() {
 mc() {
     tag="minio/mc:latest"
     docker run -it --rm --name "mc-$ts" --network="$net" \
-        --user "$(id --user)" \
+        --user "$(id -u)" \
         --env HOME=/home/devcon \
         --workdir /home/devcon \
         --volume "$basedir/home:/home/devcon:rw" \
@@ -44,7 +44,7 @@ mc() {
 mysql() {
     tag="mysql:latest"
     docker run -it --rm --name "mysql-$ts" --network "$net" \
-        --user "$(id --user)" \
+        --user "$(id -u)" \
         --env HOME=/home/devcon \
         --workdir /home/devcon \
         --volume "$basedir/home:/home/devcon:rw" \
@@ -57,9 +57,6 @@ mysql() {
 trino() {
     tag="trinodb/trino:latest"
     docker run -it --rm --name "trino-$ts" --network "$net" \
-        --user "$(id --user)" \
-        --env HOME=/home/trino \
-        --workdir /home/trino \
         --volume "$basedir/home:/home/trino:rw" \
         "$tag" \
         trino --server="http://trino.devcon.io:8080" \
