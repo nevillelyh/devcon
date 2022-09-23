@@ -1,0 +1,52 @@
+#!/bin/bash
+
+set -euo pipefail
+
+bindir="$(dirname "$(readlink -f "$0")")"
+basedir="$(readlink -f "$bindir/..")"
+project="$(basename "$basedir")"
+
+pass() {
+    echo "[PASS] $*"
+}
+
+fail() {
+    out=$1
+    shift
+    echo "[FAIL] $*"
+    echo "============================================================"
+    cat "$out"
+    echo "============================================================"
+    rm "$out"
+    exit 1
+}
+
+test_bin() {
+    bin="$1"
+    shift
+    out=$(mktemp "/tmp/$project-test-XXXXXXXX")
+    "$bindir/$bin" "$@" > "$out" 2>&1 || fail "$out" "$bin" "$@"
+    rm "$out"
+    pass "$bin" "$@"
+}
+
+echo "Setting up environment"
+"$bindir/reset"
+"$bindir/docker-compose" build
+"$bindir/docker-compose" up --detach
+
+test_bin shell metastore-hive -c "ls /apache/hive"
+test_bin shell metastore-iceberg -c "ls /apache/hive"
+test_bin shell minio -c "ls /data"
+test_bin shell mysql -c "ls /var/lib/mysql"
+test_bin shell trino -c "ls /etc/trino"
+
+test_bin beeline hive -e "!dbinfo"
+test_bin beeline iceberg -e "!dbinfo"
+test_bin mc ls minio
+test_bin mysql --execute="SHOW DATABASES"
+test_bin trino --execute="SHOW CATALOGS"
+
+echo "Tearing down environment"
+"$bindir/docker-compose" down
+"$bindir/reset"
