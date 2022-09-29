@@ -39,12 +39,14 @@ test_bin shell metastore-hive -c "ls /apache/hive"
 test_bin shell metastore-iceberg -c "ls /apache/hive"
 test_bin shell minio -c "ls /data"
 test_bin shell mysql -c "ls /var/lib/mysql"
+test_bin shell postgres -c "ls /var/lib/postgresql"
 test_bin shell trino -c "ls /etc/trino"
 
 test_bin beeline hive -e "!dbinfo"
 test_bin beeline iceberg -e "!dbinfo"
 test_bin mc ls minio
 test_bin mysql --execute="SHOW DATABASES"
+test_bin psql --command="SELECT datname FROM pg_database"
 test_bin trino --execute="SHOW CATALOGS"
 
 echo "Tearing down environment"

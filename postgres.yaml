@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:latest
+    hostname: postgres.devcon.io
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgrespass
+    command: -i
+
+  postgres-init:
+    image: postgres:latest
+    depends_on:
+      - postgres
+    hostname: postgres-init.devcon.io
+    volumes:
+      - ./conf.sh:/conf.sh:ro
+      - ./init:/init:ro
+    command: /init/postgres.sh

@@ -54,6 +54,20 @@ mysql() {
         "$@"
 }
 
+psql() {
+    tag="postgres:latest"
+    docker run -it --rm --name "postgres-$ts" --network "$net" \
+        --user "$(id -u)" \
+        --env HOME=/home/devcon \
+        --env PGPASSWORD=postgrespass \
+        --workdir /home/devcon \
+        --volume "$basedir/home:/home/devcon:rw" \
+        "$tag" \
+        psql --host="postgres.devcon.io" \
+        --user=postgres \
+        "$@"
+}
+
 trino() {
     tag="trinodb/trino:latest"
     docker run -it --rm --name "trino-$ts" --network "$net" \
@@ -67,6 +81,7 @@ case "$cli" in
     beeline) beeline "$@" ;;
     mc) mc "$@" ;;
     mysql) mysql "$@" ;;
+    psql) psql "$@" ;;
     trino) trino "$@" ;;
     *)
         echo "Unknown command: $cli"
