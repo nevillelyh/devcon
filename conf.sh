@@ -8,4 +8,4 @@ MINIO_BUCKETS=(hive iceberg)
 MYSQL_PRIVATE_DATABASES=(hive iceberg)
 MYSQL_PUBLIC_DATABASES=(tpcds tpch)
 
-TRINO_CATALOGS=(hive iceberg mysql)
+TRINO_CATALOGS=(bigquery hive iceberg mysql)
