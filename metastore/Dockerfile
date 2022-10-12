@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-buster
+FROM azul/zulu-openjdk:8-latest
 ARG hadoop_version=3.3.4
 ARG hive_version=3.1.3
 ARG mysql_version=8.0.30
@@ -23,7 +23,6 @@ RUN curl -fsSL https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j
 RUN mv mysql-connector-java-${mysql_version}/mysql-connector-java-${mysql_version}.jar hive/lib
 RUN rm -rf mysql-connector-java-${mysql_version}
 
-ENV JAVA_HOME=/usr/local/openjdk-8
 ENV HADOOP_HOME=/apache/hadoop
 ENV HIVE_HOME=/apache/hive
 
