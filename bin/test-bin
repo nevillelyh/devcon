@@ -30,24 +30,72 @@ test_bin() {
     pass "$bin" "$@"
 }
 
+wait_for_exit() {
+    actual=""
+    container=$1
+    echo "[INFO] Waiting for container $container"
+    while [[ "$actual" != "exited:0" ]]; do
+        sleep 1
+        actual=$(docker inspect --format="{{.State.Status}}:{{.State.ExitCode}}" "$container")
+    done
+    echo "[INFO] Container $container exited with code 0"
+}
+
+wait_for_log() {
+    container=$1
+    expected=$2
+    echo "[INFO] Waiting for container $container"
+    while ! docker logs "$container" 2>&1 | grep -q "$expected"; do
+        sleep 1
+    done
+    echo "[INFO] Container $container is up"
+}
+
+cd "$basedir"
+source conf.sh
+
 echo "Setting up environment"
 "$bindir/reset"
 "$bindir/docker-compose" build
 "$bindir/docker-compose" up --detach
 
-test_bin shell metastore-hive -c "ls /apache/hive"
-test_bin shell metastore-iceberg -c "ls /apache/hive"
-test_bin shell minio -c "ls /data"
-test_bin shell mysql -c "ls /var/lib/mysql"
-test_bin shell postgres -c "ls /var/lib/postgresql"
-test_bin shell trino -c "ls /etc/trino"
-
-test_bin beeline hive -e "!dbinfo"
-test_bin beeline iceberg -e "!dbinfo"
-test_bin mc ls minio
-test_bin mysql --execute="SHOW DATABASES"
-test_bin psql --command="SELECT datname FROM pg_database"
-test_bin trino --execute="SHOW CATALOGS"
+for service in "${SERVICES[@]}"; do
+    case "$service" in
+        metastore-hive)
+            wait_for_log "$project-metastore-hive-1" "Starting Hive Metastore Server"
+            test_bin shell metastore-hive -c "ls /apache/hive"
+            test_bin beeline hive -e "!dbinfo"
+            ;;
+        metastore-iceberg)
+            wait_for_log "$project-metastore-iceberg-1" "Starting Hive Metastore Server"
+            test_bin shell metastore-iceberg -c "ls /apache/hive"
+            test_bin beeline iceberg -e "!dbinfo"
+            ;;
+        minio)
+            wait_for_exit "$project-minio-init-1"
+            test_bin shell minio -c "ls /data"
+            test_bin mc ls minio
+            ;;
+        mysql)
+            wait_for_exit "$project-mysql-init-1"
+            test_bin shell mysql -c "ls /var/lib/mysql"
+            test_bin mysql --execute="SHOW DATABASES"
+            ;;
+        postgres)
+            wait_for_exit "$project-postgres-init-1"
+            test_bin shell postgres -c "ls /var/lib/postgresql"
+            test_bin psql --command="SELECT datname FROM pg_database"
+            ;;
+        trino)
+            wait_for_log "$project-trino-1" "======== SERVER STARTED ========"
+            test_bin shell trino -c "ls /etc/trino"
+            test_bin trino --execute="SHOW CATALOGS"
+            ;;
+        *)
+            echo "[WARN] No tests for service: $service"
+            ;;
+    esac
+done
 
 echo "Tearing down environment"
 "$bindir/docker-compose" down

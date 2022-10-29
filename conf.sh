@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC2034
 
-SERVICES=(minio mysql metastore-hive metastore-iceberg postgres trino)
+SERVICES=(metastore-hive metastore-iceberg minio mysql postgres trino)
 
 MINIO_BUCKETS=(hive iceberg)
 
