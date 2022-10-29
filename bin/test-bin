@@ -86,6 +86,11 @@ for service in "${SERVICES[@]}"; do
             test_bin shell postgres -c "ls /var/lib/postgresql"
             test_bin psql --command="SELECT datname FROM pg_database"
             ;;
+        scylla)
+            wait_for_exit "$project-scylla-init-1"
+            test_bin shell scylla -c "ls /var/lib/scylla"
+            test_bin cqlsh --execute="DESCRIBE KEYSPACES"
+            ;;
         trino)
             wait_for_log "$project-trino-1" "======== SERVER STARTED ========"
             test_bin shell trino -c "ls /etc/trino"

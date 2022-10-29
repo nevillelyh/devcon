@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC2034
 
-SERVICES=(metastore-hive metastore-iceberg minio mysql postgres trino)
+SERVICES=(metastore-hive metastore-iceberg minio mysql postgres scylla trino)
 
 MINIO_BUCKETS=(hive iceberg)
 
@@ -11,7 +11,9 @@ MYSQL_PUBLIC_DATABASES=(tpcds tpch)
 POSTGRES_PRIVATE_DATABASES=(hive iceberg)
 POSTGRES_PUBLIC_DATABASES=(pgsql)
 
-TRINO_CATALOGS=(bigquery hive iceberg mysql postgres)
+SCYLLA_KEYSPACES=(scylla)
+
+TRINO_CATALOGS=(bigquery hive iceberg mysql postgres scylla)
 
 ############################################################
 

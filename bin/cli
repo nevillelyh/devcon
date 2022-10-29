@@ -30,6 +30,18 @@ beeline() {
         /apache/hive/bin/beeline -u "$jdbc" -n "$user" -p "$password" "$@"
 }
 
+cqlsh() {
+    tag="scylladb/scylla"
+    docker run -it --rm --name "cqlsh-$ts" --network "$net" \
+        --user "$(id -u)" \
+        --env HOME=/home/devcon \
+        --workdir /home/devcon \
+        --volume "$basedir/home:/home/devcon:rw" \
+        --entrypoint /bin/bash \
+        "$tag" \
+        cqlsh scylla.devcon.io "$@"
+}
+
 mc() {
     tag="minio/mc:latest"
     docker run -it --rm --name "mc-$ts" --network="$net" \
@@ -79,6 +91,7 @@ trino() {
 
 case "$cli" in
     beeline) beeline "$@" ;;
+    cqlsh) cqlsh "$@" ;;
     mc) mc "$@" ;;
     mysql) mysql "$@" ;;
     psql) psql "$@" ;;

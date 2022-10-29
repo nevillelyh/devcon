@@ -1,0 +1,17 @@
+services:
+  scylla:
+    image: scylladb/scylla
+    hostname: scylla.devcon.io
+    ports:
+      - 9042:9042
+
+  scylla-init:
+    image: scylladb/scylla
+    depends_on:
+      - scylla
+    hostname: scylla-init.devcon.io
+    volumes:
+      - ./conf.sh:/conf.sh:ro
+      - ./init:/init:ro
+    entrypoint: /bin/bash
+    command: /init/scylla.sh
