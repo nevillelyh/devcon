@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>hive.metastore.db.type</name>
+    <value>derby</value>
+  </property>
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>s3a://hive/</value>
+  </property>
+</configuration>

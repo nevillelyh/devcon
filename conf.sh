@@ -3,6 +3,9 @@
 
 SERVICES=(metastore-hive metastore-iceberg minio mysql postgres scylla trino)
 
+# derby, mysql, postgres
+METASTORE_DBTYPE=derby
+
 MINIO_BUCKETS=(hive iceberg)
 
 MYSQL_PRIVATE_DATABASES=(hive iceberg)

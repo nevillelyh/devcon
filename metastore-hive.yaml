@@ -1,16 +1,13 @@
 services:
   metastore-hive:
     build: metastore
-    depends_on:
-      mysql-init:
-        condition: service_completed_successfully
     hostname: metastore-hive.devcon.io
     ports:
       - 9083:9083
     volumes:
       - ./metastore/hadoop/core-site.xml:/apache/hadoop/etc/hadoop/core-site.xml:ro
       - ./metastore/hadoop/hadoop-env.sh:/apache/hadoop/etc/hadoop/hadoop-env.sh:ro
-      - ./metastore/hive/hive-site.xml:/apache/hive/conf/hive-site.xml:ro
+      - ./metastore/hive/hive-site-${metastore_dbtype}.xml:/apache/hive/conf/hive-site.xml:ro
       - ./conf.sh:/conf.sh:ro
       - ./init:/init:ro
     command: /init/metastore.sh

@@ -23,4 +23,7 @@ gid=$(id -g)
 export uid
 export gid
 
+metastore_dbtype=$METASTORE_DBTYPE
+export metastore_dbtype
+
 docker compose "${args[@]}" "$@"

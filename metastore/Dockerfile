@@ -2,6 +2,7 @@ FROM azul/zulu-openjdk:8-latest
 ARG hadoop_version=3.3.4
 ARG hive_version=3.1.3
 ARG mysql_version=8.0.30
+ARG postgres_version=42.5.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
@@ -22,6 +23,7 @@ RUN mv apache-hive-${hive_version}-bin hive
 RUN curl -fsSL https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${mysql_version}.tar.gz | tar -C . -xz
 RUN mv mysql-connector-java-${mysql_version}/mysql-connector-java-${mysql_version}.jar hive/lib
 RUN rm -rf mysql-connector-java-${mysql_version}
+RUN curl -fsSL https://jdbc.postgresql.org/download/postgresql-${postgres_version}.jar -o hive/lib/postgresql-${postgres_version}.jar
 
 ENV HADOOP_HOME=/apache/hadoop
 ENV HIVE_HOME=/apache/hive
