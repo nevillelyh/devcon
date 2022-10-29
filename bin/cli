@@ -10,7 +10,7 @@ net="${project}_default"
 ts=$(date "+%Y%m%d%H%M%S")
 
 beeline() {
-    if [ $# -eq 0 ]; then
+    if [[ $# -eq 0 ]]; then
         echo "Usage: beeline <METASTORE> [ARG]..."
         echo "    Metastores:"
         for metastore in $(docker ps --format "{{.Names}}" | grep "^$project-metastore-.\+-1" | sed "s/^$project-metastore-\(.*\)-1/\1/g" | sort); do

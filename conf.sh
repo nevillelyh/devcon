@@ -25,7 +25,7 @@ basedir="$(readlink -f "$bindir/..")"
 
 check_biguqery() {
     for catalog in "${TRINO_CATALOGS[@]}"; do
-        if [ "$catalog" == "bigquery" ] && [ ! -f "$basedir/trino/secrets/bigquery.json" ]; then
+        if [[ "$catalog" == "bigquery" ]] && [[ ! -f "$basedir/trino/secrets/bigquery.json" ]]; then
             echo "Missing BigQuery secret key: trino/secrets/bigquery.json"
             (( errors++ ))
         fi
@@ -35,11 +35,11 @@ check_biguqery() {
 check_all() {
     errors=0
     check_biguqery
-    if [ "$errors" -ne 0 ]; then
+    if [[ "$errors" -ne 0 ]]; then
         exit 1
     fi
 }
 
-if [ ! -f /.dockerenv ]; then
+if [[ ! -f /.dockerenv ]]; then
     check_all
 fi

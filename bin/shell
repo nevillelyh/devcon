@@ -6,7 +6,7 @@ bindir="$(dirname "$(readlink -f "$0")")"
 basedir="$(readlink -f "$bindir/..")"
 project="$(basename "$basedir")"
 
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
     echo "Usage: shell <SERVICE> [ARG]..."
     echo "    Services:"
     for service in $(docker ps --format "{{.Names}}" | grep "^$project-.\+-1" | sed "s/^$project-\(.*\)-1/\1/g" | sort); do
