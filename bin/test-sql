@@ -4,7 +4,6 @@ set -euo pipefail
 
 bindir="$(dirname "$(readlink -f "$0")")"
 basedir="$(readlink -f "$bindir/..")"
-project="$(basename "$basedir")"
 
 wait_for_log() {
     container=$1
@@ -24,7 +23,7 @@ echo "Setting up environment"
 "$bindir/docker-compose" build
 "$bindir/docker-compose" up --detach
 
-wait_for_log "$project-trino-1" "======== SERVER STARTED ========"
+"$bindir/wait" "${SERVICES[@]}"
 "$bindir/trino" --execute="$(cat "$basedir/data/test/test.sql")"
 
 echo "Tearing down environment"

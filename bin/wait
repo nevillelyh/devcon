@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -euo pipefail
+
+bindir="$(dirname "$(readlink -f "$0")")"
+basedir="$(readlink -f "$bindir/..")"
+project="$(basename "$basedir")"
+
+wait_for_exit() {
+    actual=""
+    container=$1
+    echo "[INFO] Waiting for container $container"
+    while [[ "$actual" != "exited:0" ]]; do
+        sleep 1
+        actual=$(docker inspect --format="{{.State.Status}}:{{.State.ExitCode}}" "$container")
+    done
+    echo "[INFO] Container $container exited with code 0"
+}
+
+wait_for_log() {
+    container=$1
+    expected=$2
+    echo "[INFO] Waiting for container $container"
+    while ! docker logs "$container" 2>&1 | grep -q "$expected"; do
+        sleep 1
+    done
+    echo "[INFO] Container $container is up"
+}
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $(basename "$0") <SERVICE>.."
+    exit 1
+fi
+
+for service in "$@"; do
+    case "$service" in
+        metastore-hive|metastore-iceberg)
+            wait_for_log "$project-$service-1" "Starting Hive Metastore Server"
+            ;;
+        minio|mysql|postgres|scylla)
+            wait_for_exit "$project-$service-init-1"
+            ;;
+        trino)
+            wait_for_log "$project-$service-1" "======== SERVER STARTED ========"
+            ;;
+        *)
+            echo "Unknown service: $service"
+            ;;
+    esac
+done
