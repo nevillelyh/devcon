@@ -14,7 +14,7 @@ MYSQL_PUBLIC_DATABASES=(tpcds tpch)
 POSTGRES_PRIVATE_DATABASES=(hive iceberg)
 POSTGRES_PUBLIC_DATABASES=(pgsql)
 
-SCYLLA_KEYSPACES=(scylla)
+SCYLLA_KEYSPACES=(scylla tpcds tpch)
 
 TRINO_CATALOGS=(bigquery hive iceberg mysql postgres scylla)
 
