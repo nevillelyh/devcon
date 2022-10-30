@@ -7,14 +7,23 @@ basedir="$(readlink -f "$bindir/..")"
 project="$(basename "$basedir")"
 
 wait_for_exit() {
-    actual=""
+    status=""
     container=$1
     echo "[INFO] Waiting for container $container"
-    while [[ "$actual" != "exited:0" ]]; do
+    while [[ "$status" != "exited" ]]; do
         sleep 1
-        actual=$(docker inspect --format="{{.State.Status}}:{{.State.ExitCode}}" "$container")
+        status=$(docker inspect --format="{{.State.Status}}" "$container")
     done
-    echo "[INFO] Container $container exited with code 0"
+    code=$(docker inspect --format="{{.State.ExitCode}}" "$container")
+    if [[ "$code" -eq 0 ]]; then
+        echo "[INFO] Container $container exited with code 0"
+    else
+        echo "[FAIL] Container $container exited with code $code"
+        echo "============================================================"
+        docker logs "$container"
+        echo "============================================================"
+        exit 1
+    fi
 }
 
 wait_for_log() {

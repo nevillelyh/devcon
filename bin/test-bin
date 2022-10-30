@@ -33,7 +33,7 @@ test_bin() {
 cd "$basedir"
 source conf.sh
 
-echo "Setting up environment"
+echo "[INFO] Setting up environment"
 "$bindir/reset"
 "$bindir/docker-compose" build
 "$bindir/docker-compose" up --detach
@@ -41,45 +41,45 @@ echo "Setting up environment"
 for service in "${SERVICES[@]}"; do
     case "$service" in
         metastore-hive)
-            "$bindir/wait" metastore-hive
-            test_bin shell metastore-hive -c "ls /apache/hive"
-            [[ "$METASTORE_DBTYPE" != "derby" ]] && test_bin shell metastore-hive -c \
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /apache/hive"
+            [[ "$METASTORE_DBTYPE" != "derby" ]] && test_bin shell "$service" -c \
                 "/apache/hive/bin/schematool -dbType $METASTORE_DBTYPE -validate --verbose"
             ;;
         metastore-iceberg)
-            "$bindir/wait" metastore-iceberg
-            test_bin shell metastore-iceberg -c "ls /apache/hive"
-            [[ "$METASTORE_DBTYPE" != "derby" ]] && test_bin shell metastore-iceberg -c \
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /apache/hive"
+            [[ "$METASTORE_DBTYPE" != "derby" ]] && test_bin shell "$service" -c \
                 "/apache/hive/bin/schematool -dbType $METASTORE_DBTYPE -validate"
             ;;
         minio)
-            "$bindir/wait" minio
-            test_bin shell minio -c "ls /data"
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /data"
             test_bin mc ls minio
             ;;
         mariadb)
-            "$bindir/wait" mariadb
-            test_bin shell mariadb -c "ls /var/lib/mysql"
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /var/lib/mysql"
             test_bin mariadb --execute="SHOW DATABASES"
             ;;
         mysql)
-            "$bindir/wait" mysql
-            test_bin shell mysql -c "ls /var/lib/mysql"
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /var/lib/mysql"
             test_bin mysql --execute="SHOW DATABASES"
             ;;
         postgres)
-            "$bindir/wait" postgres
-            test_bin shell postgres -c "ls /var/lib/postgresql"
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /var/lib/postgresql"
             test_bin psql --command="SELECT datname FROM pg_database"
             ;;
         scylla)
-            "$bindir/wait" scylla
-            test_bin shell scylla -c "ls /var/lib/scylla"
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /var/lib/scylla"
             test_bin cqlsh --execute="DESCRIBE KEYSPACES"
             ;;
         trino)
-            "$bindir/wait" trino
-            test_bin shell trino -c "ls /etc/trino"
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /etc/trino"
             test_bin trino --execute="SHOW CATALOGS"
             ;;
         *)
@@ -88,6 +88,6 @@ for service in "${SERVICES[@]}"; do
     esac
 done
 
-echo "Tearing down environment"
+echo "[INFO] Tearing down environment"
 "$bindir/docker-compose" down
 "$bindir/reset"
