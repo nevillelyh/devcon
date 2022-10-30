@@ -1,12 +1,14 @@
 #!/bin/bash
 # shellcheck disable=SC2034
 
-SERVICES=(metastore-hive metastore-iceberg minio mysql postgres scylla trino)
+SERVICES=(metastore-hive metastore-iceberg mariadb minio mysql postgres scylla trino)
 
 # derby, mysql, postgres
 METASTORE_DBTYPE=derby
 
 MINIO_BUCKETS=(hive iceberg)
+
+MARIADB_DATABASES=(tpcds tpch)
 
 MYSQL_PRIVATE_DATABASES=(hive iceberg)
 MYSQL_PUBLIC_DATABASES=(tpcds tpch)
@@ -16,7 +18,7 @@ POSTGRES_PUBLIC_DATABASES=(pgsql)
 
 SCYLLA_KEYSPACES=(scylla tpcds tpch)
 
-TRINO_CATALOGS=(bigquery hive iceberg mysql postgres scylla)
+TRINO_CATALOGS=(bigquery hive iceberg mariadb mysql postgres scylla)
 
 ############################################################
 

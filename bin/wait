@@ -37,7 +37,7 @@ for service in "$@"; do
         metastore-hive|metastore-iceberg)
             wait_for_log "$project-$service-1" "Starting Hive Metastore Server"
             ;;
-        minio|mysql|postgres|scylla)
+        mariadb|minio|mysql|postgres|scylla)
             wait_for_exit "$project-$service-init-1"
             ;;
         trino)

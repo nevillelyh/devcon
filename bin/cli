@@ -32,6 +32,19 @@ mc() {
         "$@"
 }
 
+mariadb() {
+    tag="mariadb:latest"
+    docker run -it --rm --name "mariadb-$ts" --network "$net" \
+        --user "$(id -u)" \
+        --env HOME=/home/devcon \
+        --workdir /home/devcon \
+        --volume "$basedir/home:/home/devcon:rw" \
+        "$tag" \
+        mariadb --host="mariadb.devcon.io" \
+        --user=root --password=mariadbpass \
+        "$@"
+}
+
 mysql() {
     tag="mysql:latest"
     docker run -it --rm --name "mysql-$ts" --network "$net" \
@@ -71,6 +84,7 @@ trino() {
 case "$cli" in
     cqlsh) cqlsh "$@" ;;
     mc) mc "$@" ;;
+    mariadb) mariadb "$@" ;;
     mysql) mysql "$@" ;;
     psql) psql "$@" ;;
     trino) trino "$@" ;;

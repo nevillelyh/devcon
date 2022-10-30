@@ -57,6 +57,11 @@ for service in "${SERVICES[@]}"; do
             test_bin shell minio -c "ls /data"
             test_bin mc ls minio
             ;;
+        mariadb)
+            "$bindir/wait" mariadb
+            test_bin shell mariadb -c "ls /var/lib/mysql"
+            test_bin mariadb --execute="SHOW DATABASES"
+            ;;
         mysql)
             "$bindir/wait" mysql
             test_bin shell mysql -c "ls /var/lib/mysql"
