@@ -43,12 +43,14 @@ for service in "${SERVICES[@]}"; do
         metastore-hive)
             "$bindir/wait" metastore-hive
             test_bin shell metastore-hive -c "ls /apache/hive"
-            test_bin beeline hive -e "!dbinfo"
+            [[ "$METASTORE_DBTYPE" != "derby" ]] && test_bin shell metastore-hive -c \
+                "/apache/hive/bin/schematool -dbType $METASTORE_DBTYPE -validate --verbose"
             ;;
         metastore-iceberg)
             "$bindir/wait" metastore-iceberg
             test_bin shell metastore-iceberg -c "ls /apache/hive"
-            test_bin beeline iceberg -e "!dbinfo"
+            [[ "$METASTORE_DBTYPE" != "derby" ]] && test_bin shell metastore-iceberg -c \
+                "/apache/hive/bin/schematool -dbType $METASTORE_DBTYPE -validate"
             ;;
         minio)
             "$bindir/wait" minio

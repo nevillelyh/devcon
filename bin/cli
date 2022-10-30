@@ -9,27 +9,6 @@ project="$(basename "$basedir")"
 net="${project}_default"
 ts=$(date "+%Y%m%d%H%M%S")
 
-beeline() {
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: beeline <METASTORE> [ARG]..."
-        echo "    Metastores:"
-        for metastore in $(docker ps --format "{{.Names}}" | grep "^$project-metastore-.\+-1" | sed "s/^$project-metastore-\(.*\)-1/\1/g" | sort); do
-            echo "        $metastore"
-        done
-        exit 1
-    fi
-    metastore="$1"
-    shift
-    tag="$project-metastore-$metastore:latest"
-    jdbc="jdbc:mysql://mysql.devcon.io/$metastore"
-    user="$metastore"
-    password="${metastore}pass"
-    docker run -it --rm --name "beeline-$metastore-$ts" --network "$net" \
-        --volume "$basedir/home:/home/metastore:rw" \
-        "$tag" \
-        /apache/hive/bin/beeline -u "$jdbc" -n "$user" -p "$password" "$@"
-}
-
 cqlsh() {
     tag="scylladb/scylla"
     docker run -it --rm --name "cqlsh-$ts" --network "$net" \
@@ -90,7 +69,6 @@ trino() {
 }
 
 case "$cli" in
-    beeline) beeline "$@" ;;
     cqlsh) cqlsh "$@" ;;
     mc) mc "$@" ;;
     mysql) mysql "$@" ;;
