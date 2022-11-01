@@ -28,5 +28,5 @@ RUN curl -fsSL https://jdbc.postgresql.org/download/postgresql-${postgres_versio
 ENV HADOOP_HOME=/apache/hadoop
 ENV HIVE_HOME=/apache/hive
 
-WORKDIR /home/hive
+WORKDIR /home/metastore
 CMD /apache/hive/bin/hive --service metastore

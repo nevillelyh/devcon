@@ -5,6 +5,7 @@ services:
     ports:
       - 9083:9083
     volumes:
+      - ./data/metastore-hive:/home/metastore:rw
       - ./metastore/hadoop/core-site.xml:/apache/hadoop/etc/hadoop/core-site.xml:ro
       - ./metastore/hadoop/hadoop-env.sh:/apache/hadoop/etc/hadoop/hadoop-env.sh:ro
       - ./metastore/hive/hive-site-${metastore_dbtype}.xml:/apache/hive/conf/hive-site.xml:ro
