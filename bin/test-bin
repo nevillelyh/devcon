@@ -62,6 +62,11 @@ for service in "${SERVICES[@]}"; do
             test_bin shell "$service" -c "ls /var/lib/mysql"
             test_bin mariadb --execute="SHOW DATABASES"
             ;;
+        mongo)
+            "$bindir/wait" "$service"
+            test_bin shell "$service" -c "ls /data/db"
+            test_bin mongosh --eval "show databases"
+            ;;
         mysql)
             "$bindir/wait" "$service"
             test_bin shell "$service" -c "ls /var/lib/mysql"

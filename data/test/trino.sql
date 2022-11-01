@@ -19,6 +19,12 @@ CREATE TABLE mariadb.tpch.nation AS SELECT * FROM tpch.tiny.nation;
 SELECT * FROM mariadb.tpch.nation LIMIT 1;
 -- END mariadb
 
+-- BEGIN mongo
+CREATE SCHEMA mongo.tpch;
+CREATE TABLE mongo.tpch.nation AS SELECT * FROM tpch.tiny.nation;
+SELECT * FROM mongo.tpch.nation LIMIT 1;
+-- END mongo
+
 -- BEGIN mysql
 CREATE TABLE mysql.tpch.nation AS SELECT * FROM tpch.tiny.nation;
 SELECT * FROM mysql.tpch.nation LIMIT 1;

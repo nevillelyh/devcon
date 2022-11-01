@@ -49,6 +49,9 @@ for service in "$@"; do
         mariadb|minio|mysql|postgres|scylla)
             wait_for_exit "$project-$service-init-1"
             ;;
+        mongo)
+            wait_for_log "$project-$service-1" '"ctx":"listener","msg":"Listening on","attr":{"address":"0.0.0.0"}'
+            ;;
         trino)
             wait_for_log "$project-$service-1" "======== SERVER STARTED ========"
             ;;

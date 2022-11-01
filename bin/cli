@@ -45,6 +45,19 @@ mariadb() {
         "$@"
 }
 
+mongosh() {
+    tag="mongo:latest"
+    docker run -it --rm --name "mongo-$ts" --network "$net" \
+        --user "$(id -u)" \
+        --env HOME=/home/devcon \
+        --workdir /home/devcon \
+        --volume "$basedir/home:/home/devcon:rw" \
+        "$tag" \
+        mongosh --host="mongo.devcon.io" \
+        --username mongo --password mongopass \
+        "$@"
+}
+
 mysql() {
     tag="mysql:latest"
     docker run -it --rm --name "mysql-$ts" --network "$net" \
@@ -85,6 +98,7 @@ case "$cli" in
     cqlsh) cqlsh "$@" ;;
     mc) mc "$@" ;;
     mariadb) mariadb "$@" ;;
+    mongosh) mongosh "$@" ;;
     mysql) mysql "$@" ;;
     psql) psql "$@" ;;
     trino) trino "$@" ;;
