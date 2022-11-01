@@ -15,6 +15,7 @@ SELECT * FROM iceberg.tpch.nation LIMIT 1;
 -- END iceberg
 
 -- BEGIN mariadb
+CREATE SCHEMA mariadb.tpch;
 CREATE TABLE mariadb.tpch.nation AS SELECT * FROM tpch.tiny.nation;
 SELECT * FROM mariadb.tpch.nation LIMIT 1;
 -- END mariadb
@@ -26,6 +27,7 @@ SELECT * FROM mongo.tpch.nation LIMIT 1;
 -- END mongo
 
 -- BEGIN mysql
+CREATE SCHEMA mysql.tpch;
 CREATE TABLE mysql.tpch.nation AS SELECT * FROM tpch.tiny.nation;
 SELECT * FROM mysql.tpch.nation LIMIT 1;
 -- END mysql

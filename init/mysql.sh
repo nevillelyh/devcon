@@ -21,16 +21,3 @@ for db in "${MYSQL_PRIVATE_DATABASES[@]}"; do
     $cmd < "$HOME/init.sql"
     rm "$HOME/init.sql"
 done
-
-user="mysql"
-pass="mysqlpass"
-$cmd --execute="CREATE USER IF NOT EXISTS '$user'@'%' IDENTIFIED BY '$pass';"
-for db in "${MYSQL_PUBLIC_DATABASES[@]}"; do
-    echo "Creating MySQL database $db: user=$user password=$pass"
-    {
-        echo "CREATE DATABASE IF NOT EXISTS $db;"
-        echo "GRANT ALL PRIVILEGES ON $db.* TO '$user'@'%';"
-    } > "$HOME/init.sql"
-    $cmd < "$HOME/init.sql"
-    rm "$HOME/init.sql"
-done

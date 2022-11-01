@@ -7,13 +7,3 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: mariadbpass
     command: --bind-address=0.0.0.0
-
-  mariadb-init:
-    image: mariadb:latest
-    depends_on:
-      - mariadb
-    hostname: mariadb-init.devcon.io
-    volumes:
-      - ./conf.sh:/conf.sh:ro
-      - ./init:/init:ro
-    command: /init/mariadb.sh

@@ -46,8 +46,11 @@ for service in "$@"; do
         metastore-hive|metastore-iceberg)
             wait_for_log "$project-$service-1" "Starting Hive Metastore Server"
             ;;
-        mariadb|minio|mysql|postgres|scylla)
+        minio|mysql|postgres|scylla)
             wait_for_exit "$project-$service-init-1"
+            ;;
+        mariadb)
+            wait_for_log "$project-$service-1" "port: 3306  mariadb.org binary distribution"
             ;;
         mongo)
             wait_for_log "$project-$service-1" '"ctx":"listener","msg":"Listening on","attr":{"address":"0.0.0.0"}'
