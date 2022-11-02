@@ -4,7 +4,7 @@
 SERVICES=(metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
 
 # derby, mysql, postgres
-METASTORE_DBTYPE=derby
+METASTORE_DBTYPE=${METASTORE_DBTYPE:-derby}
 
 MINIO_BUCKETS=(hive iceberg)
 
