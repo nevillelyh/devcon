@@ -17,6 +17,11 @@ SCYLLA_KEYSPACES=(scylla tpcds tpch)
 
 TRINO_CATALOGS=(bigquery hive iceberg mariadb mongo mysql postgres scylla)
 
+export MARIADB_PORT=${MARIADB_PORT:-3306}
+export METASTORE_HIVE_PORT=${METASTORE_HIVE_PORT:-9083}
+export METASTORE_ICEBERG_PORT=${METASTORE_ICEBERG_PORT:-9084}
+export MYSQL_PORT=${MYSQL_PORT:-3307}
+
 ############################################################
 
 bindir="$(dirname "$(readlink -f "$0")")"

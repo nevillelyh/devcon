@@ -3,7 +3,7 @@ services:
     build: metastore
     hostname: metastore-iceberg.devcon.io
     ports:
-      - 9084:9083
+      - ${METASTORE_ICEBERG_PORT}:9083
     volumes:
       - ./data/metastore-iceberg:/home/metastore:rw
       - ./metastore/hadoop/core-site.xml:/apache/hadoop/etc/hadoop/core-site.xml:ro

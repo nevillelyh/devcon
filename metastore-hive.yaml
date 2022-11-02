@@ -3,7 +3,7 @@ services:
     build: metastore
     hostname: metastore-hive.devcon.io
     ports:
-      - 9083:9083
+      - ${METASTORE_HIVE_PORT}:9083
     volumes:
       - ./data/metastore-hive:/home/metastore:rw
       - ./metastore/hadoop/core-site.xml:/apache/hadoop/etc/hadoop/core-site.xml:ro
