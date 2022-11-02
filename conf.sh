@@ -20,7 +20,14 @@ TRINO_CATALOGS=(bigquery hive iceberg mariadb mongo mysql postgres scylla)
 export MARIADB_PORT=${MARIADB_PORT:-3306}
 export METASTORE_HIVE_PORT=${METASTORE_HIVE_PORT:-9083}
 export METASTORE_ICEBERG_PORT=${METASTORE_ICEBERG_PORT:-9084}
+export MINIO_API_PORT=${MINIO_API_PORT:-9000}
+export MINIO_UI_PORT=${MINIO_UI_PORT:-9001}
+export MONGO_PORT=${MONGO_PORT:-27017}
+export MONGO_EXPRESS_PORT=${MONGO_EXPRESS_PORT:-8081}
 export MYSQL_PORT=${MYSQL_PORT:-3307}
+export POSTGRES_PORT=${POSTGRES_PORT:-5432}
+export SCYLLA_PORT=${SCYLLA_PORT:-9042}
+export TRINO_PORT=${TRINO_PORT:-8080}
 
 ############################################################
 

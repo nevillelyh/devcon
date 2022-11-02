@@ -3,8 +3,8 @@ services:
     image: minio/minio:latest
     hostname: minio.devcon.io
     ports:
-      - 9000:9000
-      - 9001:9001
+      - ${MINIO_API_PORT}:9000
+      - ${MINIO_UI_PORT}:9001
     volumes:
       - ./data/minio:/data:rw
     user: "${uid}:${gid}"

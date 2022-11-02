@@ -3,7 +3,7 @@ services:
     image: trinodb/trino:latest
     hostname: trino.devcon.io
     ports:
-      - 8080:8080
+      - ${TRINO_PORT}:8080
     volumes:
       - ./trino:/trino:ro
       - ./conf.sh:/conf.sh:ro

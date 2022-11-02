@@ -3,7 +3,7 @@ services:
     image: scylladb/scylla
     hostname: scylla.devcon.io
     ports:
-      - 9042:9042
+      - ${SCYLLA_PORT}:9042
 
   scylla-init:
     image: scylladb/scylla
