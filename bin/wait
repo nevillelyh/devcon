@@ -29,8 +29,9 @@ wait_for_exit() {
 wait_for_log() {
     container=$1
     expected=$2
+    count=$3
     echo "[INFO] Waiting for container $container"
-    while ! docker logs "$container" 2>&1 | grep -q "$expected"; do
+    while [[ ! $(docker logs "$container" 2>&1 | grep -c "$expected") -eq "$count" ]]; do
         sleep 1
     done
     echo "[INFO] Container $container is up"
@@ -44,19 +45,19 @@ fi
 for service in "$@"; do
     case "$service" in
         metastore-hive|metastore-iceberg)
-            wait_for_log "$project-$service-1" "Starting Hive Metastore Server"
+            wait_for_log "$project-$service-1" "Starting Hive Metastore Server" 1
             ;;
         minio|mysql|postgres|scylla)
             wait_for_exit "$project-$service-init-1"
             ;;
         mariadb)
-            wait_for_log "$project-$service-1" "port: 3306  mariadb.org binary distribution"
+            wait_for_log "$project-$service-1" "mariadbd: ready for connections." 2
             ;;
         mongo)
-            wait_for_log "$project-$service-1" '"ctx":"listener","msg":"Listening on","attr":{"address":"0.0.0.0"}'
+            wait_for_log "$project-$service-1" '"ctx":"listener","msg":"Listening on","attr":{"address":"0.0.0.0"}' 1
             ;;
         trino)
-            wait_for_log "$project-$service-1" "======== SERVER STARTED ========"
+            wait_for_log "$project-$service-1" "======== SERVER STARTED ========" 1
             ;;
         *)
             echo "Unknown service: $service"
