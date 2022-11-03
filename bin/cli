@@ -2,14 +2,13 @@
 
 set -euo pipefail
 
-cli="$(basename "$0")"
 bindir="$(dirname "$(readlink -f "$0")")"
 basedir="$(readlink -f "$bindir/..")"
 project="$(basename "$basedir")"
 net="${project}_default"
 ts=$(date "+%Y%m%d%H%M%S")
 
-cqlsh() {
+run_cqlsh() {
     tag="scylladb/scylla"
     docker run -it --rm --name "cqlsh-$ts" --network "$net" \
         --user "$(id -u)" \
@@ -21,7 +20,7 @@ cqlsh() {
         cqlsh scylla.devcon.io "$@"
 }
 
-mc() {
+run_mc() {
     tag="minio/mc:latest"
     docker run -it --rm --name "mc-$ts" --network="$net" \
         --user "$(id -u)" \
@@ -32,7 +31,7 @@ mc() {
         "$@"
 }
 
-mariadb() {
+run_mariadb() {
     tag="mariadb:latest"
     docker run -it --rm --name "mariadb-$ts" --network "$net" \
         --user "$(id -u)" \
@@ -45,7 +44,7 @@ mariadb() {
         "$@"
 }
 
-mongosh() {
+run_mongosh() {
     tag="mongo:latest"
     docker run -it --rm --name "mongo-$ts" --network "$net" \
         --user "$(id -u)" \
@@ -58,7 +57,7 @@ mongosh() {
         "$@"
 }
 
-mysql() {
+run_mysql() {
     tag="mysql:latest"
     docker run -it --rm --name "mysql-$ts" --network "$net" \
         --user "$(id -u)" \
@@ -71,7 +70,7 @@ mysql() {
         "$@"
 }
 
-psql() {
+run_psql() {
     tag="postgres:latest"
     docker run -it --rm --name "postgres-$ts" --network "$net" \
         --user "$(id -u)" \
@@ -85,7 +84,7 @@ psql() {
         "$@"
 }
 
-trino() {
+run_trino() {
     tag="trinodb/trino:latest"
     docker run -it --rm --name "trino-$ts" --network "$net" \
         --volume "$basedir/home:/home/trino:rw" \
@@ -94,16 +93,27 @@ trino() {
         "$@"
 }
 
-case "$cli" in
-    cqlsh) cqlsh "$@" ;;
-    mc) mc "$@" ;;
-    mariadb) mariadb "$@" ;;
-    mongosh) mongosh "$@" ;;
-    mysql) mysql "$@" ;;
-    psql) psql "$@" ;;
-    trino) trino "$@" ;;
-    *)
-        echo "Unknown command: $cli"
-        exit 1
-        ;;
-esac
+cli="$(basename "$0")"
+
+contains() {
+    cli="$1"
+    # Bash 3 on Mac missing readarray
+    # shellcheck disable=SC2207
+    clis=($(grep -o "^run_.\+()" "$(readlink -f "$0")" | sed "s/^run_\(.*\)()$/\1/"))
+    shift
+    for c in "${clis[@]}"; do
+        [[ "$c" == "$cli" ]] && return 0
+    done
+    return 1
+}
+
+if ! contains "$cli"; then
+    echo "Unknown CLI: $cli"
+    echo "    Available CLIs:"
+    for c in "${clis[@]}"; do
+        echo "        $c"
+    done
+    exit 1
+fi
+
+"run_$cli" "$@"
