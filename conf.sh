@@ -52,18 +52,66 @@ fi
 bindir="$(dirname "$(readlink -f "$0")")"
 basedir="$(readlink -f "$bindir/..")"
 
-check_biguqery() {
+contains() {
+    needle=$1
+    shift
+    for x in "$@"; do
+        [[ "$x" == "$needle" ]] && return 0
+    done
+    return 1
+}
+
+error() {
+    echo "[ERROR] $1"
+    (( errors++ ))
+    return 0
+}
+
+check_dbtype() {
+    if ! contains "metastore-hive" "${SERVICES[@]}" && ! contains "metastore-iceberg" "${SERVICES[@]}"; then
+        return
+    fi
+    case "$METASTORE_DBTYPE" in
+        derby) ;;
+        mysql)
+            if ! contains mysql "${SERVICES[@]}"; then
+                error "METASTORE_DBTYPE=$METASTORE_DBTYPE depends on mysql service"
+            fi
+            ;;
+        postgres)
+            if ! contains postgres "${SERVICES[@]}"; then
+                error "METASTORE_DBTYPE=$METASTORE_DBTYPE depends on postgres service"
+            fi
+            ;;
+    esac
+}
+
+check_catalogs() {
     for catalog in "${TRINO_CATALOGS[@]}"; do
-        if [[ "$catalog" == "bigquery" ]] && [[ ! -f "$basedir/trino/secrets/bigquery.json" ]]; then
-            echo "Missing BigQuery secret key: trino/secrets/bigquery.json"
-            (( errors++ ))
-        fi
+        case "$catalog" in
+            bigquery)
+                if [[ ! -f "$basedir/trino/secrets/bigquery.json" ]]; then
+                    error "Missing BigQuery secret key: trino/secrets/bigquery.json"
+                fi
+                ;;
+            hive|iceberg)
+                if ! contains "metastore-$catalog" "${SERVICES[@]}"; then
+                    error "$catalog catalog depends on metastore-$catalog service"
+                fi
+                ;;
+            *)
+                if ! contains "$catalog" "${SERVICES[@]}"; then
+                    error "$catalog catalog depends on $catalog service"
+                fi
+                ;;
+        esac
     done
 }
 
 check_all() {
     errors=0
-    check_biguqery
+    check_dbtype
+    check_catalogs
     if [[ "$errors" -ne 0 ]]; then
         exit 1
     fi
