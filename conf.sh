@@ -1,9 +1,13 @@
 #!/bin/bash
 # shellcheck disable=SC2034
 
-SERVICES=(metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
+# Override with SERVICES=service1,service2,...
+SERVICES_DEFAULT=(metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
 
-# derby, mysql, postgres
+# Override with TRINO_CATALOGS=catalog1,catalog2,...
+TRINO_CATALOGS_DEFAULT=(bigquery hive iceberg mariadb mongo mysql postgres scylla)
+
+# Supported database types: derby, mysql, postgres
 export METASTORE_DBTYPE=${METASTORE_DBTYPE:-derby}
 
 MINIO_BUCKETS=(hive iceberg)
@@ -14,8 +18,6 @@ POSTGRES_PRIVATE_DATABASES=(hive iceberg)
 POSTGRES_PUBLIC_DATABASES=(pgsql)
 
 SCYLLA_KEYSPACES=(scylla tpcds tpch)
-
-TRINO_CATALOGS=(bigquery hive iceberg mariadb mongo mysql postgres scylla)
 
 export MARIADB_PORT=${MARIADB_PORT:-3306}
 export METASTORE_HIVE_PORT=${METASTORE_HIVE_PORT:-9083}
@@ -28,6 +30,22 @@ export MYSQL_PORT=${MYSQL_PORT:-3307}
 export POSTGRES_PORT=${POSTGRES_PORT:-5432}
 export SCYLLA_PORT=${SCYLLA_PORT:-9042}
 export TRINO_PORT=${TRINO_PORT:-8080}
+
+############################################################
+
+SERVICES_STR=${SERVICES:-}
+if [[ -z "$SERVICES_STR" ]]; then
+    SERVICES=("${SERVICES_DEFAULT[@]}")
+else
+    IFS="," read -r -a SERVICES <<< "$SERVICES_STR"
+fi
+
+TRINO_CATALOGS_STR=${TRINO_CATALOGS:-}
+if [[ -z "$TRINO_CATALOGS_STR" ]]; then
+    TRINO_CATALOGS=("${TRINO_CATALOGS_DEFAULT[@]}")
+else
+    IFS="," read -r -a TRINO_CATALOGS <<< "$TRINO_CATALOGS_STR"
+fi
 
 ############################################################
 
