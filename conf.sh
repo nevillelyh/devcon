@@ -47,6 +47,16 @@ else
     IFS="," read -r -a TRINO_CATALOGS <<< "$TRINO_CATALOGS_STR"
 fi
 
+join() {
+    first=${1-}
+    if shift; then
+        printf "%s" "$first" "${@/#/,}"
+    fi
+}
+
+TRINO_CATALOGS_STR="$(join "${TRINO_CATALOGS[@]}")"
+export TRINO_CATALOGS_STR
+
 ############################################################
 
 bindir="$(dirname "$(readlink -f "$0")")"
