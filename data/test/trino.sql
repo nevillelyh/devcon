@@ -2,7 +2,11 @@
 SELECT * FROM bigquery.samples.shakespeare LIMIT 1;
 -- END bigquery
 
--- BEGIN hive
+-- BEGIN cockroach
+-- https://github.com/trinodb/trino/pull/13772#discussion_r951261231
+SELECT * FROM cockroach_tpcc.public.district LIMIT 1;
+-- END cockroach
+
 CREATE SCHEMA hive.tpch;
 CREATE TABLE hive.tpch.nation AS SELECT * FROM tpch.tiny.nation;
 SELECT * FROM hive.tpch.nation LIMIT 1;

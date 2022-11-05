@@ -8,6 +8,17 @@ project="$(basename "$basedir")"
 net="${project}_default"
 ts=$(date "+%Y%m%d%H%M%S")
 
+run_cockroach() {
+    tag="cockroachdb/cockroach"
+    docker run -it --rm --name "cockroach-$ts" --network "$net" \
+        --user "$(id -u)" \
+        --env HOME=/home/devcon \
+        --workdir /home/devcon \
+        --volume "$basedir/home:/home/devcon:rw" \
+        "$tag" \
+        sql --insecure --host cockroach1.devcon.io "$@"
+}
+
 run_cqlsh() {
     tag="scylladb/scylla"
     docker run -it --rm --name "cqlsh-$ts" --network "$net" \

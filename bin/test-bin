@@ -40,6 +40,11 @@ echo "[INFO] Setting up environment"
 
 for service in "${SERVICES[@]}"; do
     case "$service" in
+        cockroach)
+            "$bindir/wait" "$service"
+            test_bin shell cockroach1 -c "ls /cockroach/cockroach-data"
+            test_bin cockroach --execute "SELECT datname FROM pg_database"
+            ;;
         metastore-hive)
             "$bindir/wait" "$service"
             test_bin shell "$service" -c "ls /apache/hive"

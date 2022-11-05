@@ -2,13 +2,15 @@
 # shellcheck disable=SC2034
 
 # Override with SERVICES=service1,service2,...
-SERVICES_DEFAULT=(metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
+SERVICES_DEFAULT=(cockroach metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
 
 # Override with TRINO_CATALOGS=catalog1,catalog2,...
-TRINO_CATALOGS_DEFAULT=(bigquery hive iceberg mariadb mongo mysql postgres scylla)
+TRINO_CATALOGS_DEFAULT=(bigquery cockroach hive iceberg mariadb mongo mysql postgres scylla)
 
 # Supported database types: derby, mysql, postgres
 export METASTORE_DBTYPE=${METASTORE_DBTYPE:-derby}
+
+COCKROACH_DATABASES=(bank intro kv movr startrek tpcc ttllogger ycsb)
 
 MINIO_BUCKETS=(hive iceberg)
 
@@ -19,6 +21,8 @@ POSTGRES_PUBLIC_DATABASES=(pgsql)
 
 SCYLLA_KEYSPACES=(scylla tpcds tpch)
 
+export COCKROACH_PORT=${COCKROACH_PORT:-26257}
+export COCKROACH_UI_PORT=${COCKROACH_UI_PORT:-8082}
 export MARIADB_PORT=${MARIADB_PORT:-3306}
 export METASTORE_HIVE_PORT=${METASTORE_HIVE_PORT:-9083}
 export METASTORE_ICEBERG_PORT=${METASTORE_ICEBERG_PORT:-9084}
