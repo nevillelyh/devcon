@@ -87,6 +87,9 @@ check_dbtype() {
 }
 
 check_catalogs() {
+    if ! contains trino "${SERVICES[@]}"; then
+        return
+    fi
     for catalog in "${TRINO_CATALOGS[@]}"; do
         case "$catalog" in
             bigquery)
