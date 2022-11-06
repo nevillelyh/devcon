@@ -1,7 +1,7 @@
 FROM azul/zulu-openjdk:8-latest
 ARG hadoop_version=3.3.4
 ARG hive_version=3.1.3
-ARG mysql_version=8.0.30
+ARG mysql_version=8.0.31
 ARG postgres_version=42.5.0
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -20,9 +20,7 @@ RUN curl -fsSL https://dlcdn.apache.org/hadoop/common/hadoop-${hadoop_version}/h
 RUN mv hadoop-${hadoop_version} hadoop
 RUN curl -fsSL https://dlcdn.apache.org/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz | tar -C . -xz
 RUN mv apache-hive-${hive_version}-bin hive
-RUN curl -fsSL https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${mysql_version}.tar.gz | tar -C . -xz
-RUN mv mysql-connector-java-${mysql_version}/mysql-connector-java-${mysql_version}.jar hive/lib
-RUN rm -rf mysql-connector-java-${mysql_version}
+RUN curl -fsSL https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.0.31/mysql-connector-j-${mysql_version}.jar -o hive/lib/mysql-connector-j-${mysql_version}.jar
 RUN curl -fsSL https://jdbc.postgresql.org/download/postgresql-${postgres_version}.jar -o hive/lib/postgresql-${postgres_version}.jar
 
 ENV HADOOP_HOME=/apache/hadoop
