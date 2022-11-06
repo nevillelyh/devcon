@@ -23,9 +23,9 @@ echo "[INFO] Setting up environment"
 "$bindir/docker-compose" build
 "$bindir/docker-compose" up --detach
 
-"$bindir/wait" "${SERVICES[@]}"
+"$bindir/wait" "${SERVICES_ARRAY[@]}"
 
-for catalog in "${TRINO_CATALOGS[@]}"; do
+for catalog in "${TRINO_CATALOGS_ARRAY[@]}"; do
     query="$(sed -n "/-- BEGIN $catalog/, /-- END $catalog/p" "$basedir/data/test/trino.sql" | grep -v "^--")"
     echo "[INFO] Testing catalog: $catalog"
     echo "$query"

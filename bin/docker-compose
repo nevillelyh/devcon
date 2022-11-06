@@ -9,7 +9,7 @@ cd "$basedir"
 source conf.sh
 
 args=()
-for service in "${SERVICES[@]}"; do
+for service in "${SERVICES_ARRAY[@]}"; do
     yaml="$service.yaml"
     if [[ ! -f "$yaml" ]]; then
         echo "File not found: $yaml"

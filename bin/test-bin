@@ -38,7 +38,7 @@ echo "[INFO] Setting up environment"
 "$bindir/docker-compose" build
 "$bindir/docker-compose" up --detach
 
-for service in "${SERVICES[@]}"; do
+for service in "${SERVICES_ARRAY[@]}"; do
     case "$service" in
         cockroach)
             "$bindir/wait" "$service"

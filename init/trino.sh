@@ -35,7 +35,7 @@ create_multi() {
     fi
 }
 
-for catalog in "${TRINO_CATALOGS[@]}"; do
+for catalog in "${TRINO_CATALOGS_ARRAY[@]}"; do
     case "$catalog" in
         cockroach)
             create_multi "$catalog" "${COCKROACH_DATABASES[@]}"

@@ -2,10 +2,10 @@
 # shellcheck disable=SC2034
 
 # Override with SERVICES=service1,service2,...
-SERVICES_DEFAULT=(cockroach metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
+SERVICES_ARRAY=(cockroach metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
 
 # Override with TRINO_CATALOGS=catalog1,catalog2,...
-TRINO_CATALOGS_DEFAULT=(bigquery cockroach hive iceberg mariadb mongo mysql postgres scylla)
+TRINO_CATALOGS_ARRAY=(bigquery cockroach hive iceberg mariadb mongo mysql postgres scylla)
 
 # Supported database types: derby, mysql, postgres
 export METASTORE_DBTYPE=${METASTORE_DBTYPE:-derby}
@@ -37,20 +37,6 @@ export TRINO_PORT=${TRINO_PORT:-8080}
 
 ############################################################
 
-SERVICES_STR=${SERVICES:-}
-if [[ -z "$SERVICES_STR" ]]; then
-    SERVICES=("${SERVICES_DEFAULT[@]}")
-else
-    IFS="," read -r -a SERVICES <<< "$SERVICES_STR"
-fi
-
-TRINO_CATALOGS_STR=${TRINO_CATALOGS:-}
-if [[ -z "$TRINO_CATALOGS_STR" ]]; then
-    TRINO_CATALOGS=("${TRINO_CATALOGS_DEFAULT[@]}")
-else
-    IFS="," read -r -a TRINO_CATALOGS <<< "$TRINO_CATALOGS_STR"
-fi
-
 join() {
     first=${1-}
     if shift; then
@@ -58,8 +44,18 @@ join() {
     fi
 }
 
-TRINO_CATALOGS_STR="$(join "${TRINO_CATALOGS[@]}")"
-export TRINO_CATALOGS_STR
+SERVICES=${SERVICES:-}
+if [[ -n "$SERVICES" ]]; then
+    IFS="," read -r -a SERVICES_ARRAY <<< "$SERVICES"
+fi
+
+TRINO_CATALOGS=${TRINO_CATALOGS:-}
+if [[ -n "$TRINO_CATALOGS" ]]; then
+    IFS="," read -r -a TRINO_CATALOGS_ARRAY <<< "$TRINO_CATALOGS"
+fi
+
+TRINO_CATALOGS="$(join "${TRINO_CATALOGS_ARRAY[@]}")"
+export TRINO_CATALOGS
 
 ############################################################
 
@@ -82,18 +78,18 @@ error() {
 }
 
 check_dbtype() {
-    if ! contains "metastore-hive" "${SERVICES[@]}" && ! contains "metastore-iceberg" "${SERVICES[@]}"; then
+    if ! contains "metastore-hive" "${SERVICES_ARRAY[@]}" && ! contains "metastore-iceberg" "${SERVICES_ARRAY[@]}"; then
         return
     fi
     case "$METASTORE_DBTYPE" in
         derby) ;;
         mysql)
-            if ! contains mysql "${SERVICES[@]}"; then
+            if ! contains mysql "${SERVICES_ARRAY[@]}"; then
                 error "METASTORE_DBTYPE=$METASTORE_DBTYPE depends on mysql service"
             fi
             ;;
         postgres)
-            if ! contains postgres "${SERVICES[@]}"; then
+            if ! contains postgres "${SERVICES_ARRAY[@]}"; then
                 error "METASTORE_DBTYPE=$METASTORE_DBTYPE depends on postgres service"
             fi
             ;;
@@ -101,10 +97,10 @@ check_dbtype() {
 }
 
 check_catalogs() {
-    if ! contains trino "${SERVICES[@]}"; then
+    if ! contains trino "${SERVICES_ARRAY[@]}"; then
         return
     fi
-    for catalog in "${TRINO_CATALOGS[@]}"; do
+    for catalog in "${TRINO_CATALOGS_ARRAY[@]}"; do
         case "$catalog" in
             bigquery)
                 if [[ ! -f "$basedir/trino/secrets/bigquery.json" ]]; then
@@ -112,12 +108,12 @@ check_catalogs() {
                 fi
                 ;;
             hive|iceberg)
-                if ! contains "metastore-$catalog" "${SERVICES[@]}"; then
+                if ! contains "metastore-$catalog" "${SERVICES_ARRAY[@]}"; then
                     error "$catalog catalog depends on metastore-$catalog service"
                 fi
                 ;;
             *)
-                if ! contains "$catalog" "${SERVICES[@]}"; then
+                if ! contains "$catalog" "${SERVICES_ARRAY[@]}"; then
                     error "$catalog catalog depends on $catalog service"
                 fi
                 ;;
