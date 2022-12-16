@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034
 
 # Override with SERVICES=service1,service2,...
-SERVICES_ARRAY=(cockroach metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
+SERVICES_ARRAY=(cockroach kafka metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
 
 # Override with TRINO_CATALOGS=catalog1,catalog2,...
 TRINO_CATALOGS_ARRAY=(bigquery cockroach hive iceberg mariadb mongo mysql postgres scylla)
@@ -22,7 +22,11 @@ POSTGRES_PUBLIC_DATABASES=(pgsql)
 SCYLLA_KEYSPACES=(scylla tpcds tpch)
 
 export COCKROACH_PORT=${COCKROACH_PORT:-26257}
-export COCKROACH_UI_PORT=${COCKROACH_UI_PORT:-8082}
+export COCKROACH_UI_PORT=${COCKROACH_UI_PORT:-8083}
+export CP_ZOOKEEPER_PORT=${CP_ZOOKEEPER_PORT:-2181}
+export CP_KAFKA_PORT=${CP_KAFKA_PORT:-9092}
+export CP_SCHEMA_REGISTRY_PORT=${CP_SCHEMA_REGISTRY_PORT:-8082}
+export CP_CONTROL_CENTER_PORT=${CP_CONTROL_CENTER_PORT:-9021}
 export MARIADB_PORT=${MARIADB_PORT:-3306}
 export METASTORE_HIVE_PORT=${METASTORE_HIVE_PORT:-9083}
 export METASTORE_ICEBERG_PORT=${METASTORE_ICEBERG_PORT:-9084}

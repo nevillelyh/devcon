@@ -31,6 +31,15 @@ run_cqlsh() {
         cqlsh scylla.devcon.io "$@"
 }
 
+run_kcat() {
+    tag="edenhill/kcat:1.7.1"
+    docker run -it --rm --name "kcat-$ts" --network=devcon_default \
+        "$tag" \
+        -b cp-broker.devcon.io:29092 \
+        -r http://cp-schema-registry.devcon.io:8081 \
+        "$@"
+}
+
 run_mc() {
     tag="minio/mc:latest"
     docker run -it --rm --name "mc-$ts" --network="$net" \
