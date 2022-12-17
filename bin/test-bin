@@ -42,7 +42,7 @@ for service in "${SERVICES_ARRAY[@]}"; do
     case "$service" in
         cockroach)
             "$bindir/wait" "$service"
-            test_bin shell cockroach1 -c "ls /cockroach/cockroach-data"
+            test_bin shell cockroach -c "ls /cockroach/cockroach-data"
             test_bin cockroach --execute "SELECT datname FROM pg_database"
             ;;
         metastore-hive)

@@ -16,7 +16,7 @@ run_cockroach() {
         --workdir /home/devcon \
         --volume "$basedir/home:/home/devcon:rw" \
         "$tag" \
-        sql --insecure --host cockroach1.devcon.io "$@"
+        sql --insecure --host cockroach.devcon.io "$@"
 }
 
 run_cqlsh() {
