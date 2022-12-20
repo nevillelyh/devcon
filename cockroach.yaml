@@ -7,7 +7,7 @@ services:
       - ${COCKROACH_UI_PORT}:8080
     volumes:
       - ./data/cockroach:/cockroach/cockroach-data:rw
-    user: "${uid}:${gid}"
+    user: "${UID}:${GID}"
     command: start-single-node --insecure
 
   cockroach-init:

@@ -18,9 +18,8 @@ for service in "${SERVICES_ARRAY[@]}"; do
     args+=("-f" "$yaml")
 done
 
-uid=$(id -u)
-gid=$(id -g)
-export uid
-export gid
+# https://github.com/docker/compose/issues/2380
+export UID
+export GID
 
 docker compose "${args[@]}" "$@"

@@ -7,7 +7,7 @@ services:
       - ${MINIO_UI_PORT}:9001
     volumes:
       - ./data/minio:/data:rw
-    user: "${uid}:${gid}"
+    user: "${UID}:${GID}"
     command: server /data --console-address ":9001"
   minio-init:
     image: minio/mc:latest
