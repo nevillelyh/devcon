@@ -5,7 +5,7 @@
 SERVICES_ARRAY=(cockroach kafka metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
 
 # Override with TRINO_CATALOGS=catalog1,catalog2,...
-TRINO_CATALOGS_ARRAY=(bigquery cockroach hive iceberg mariadb mongo mysql postgres scylla)
+TRINO_CATALOGS_ARRAY=(bigquery cockroach hive iceberg kafka mariadb mongo mysql postgres scylla)
 
 # Supported database types: derby, mysql, postgres
 export METASTORE_DBTYPE=${METASTORE_DBTYPE:-derby}
