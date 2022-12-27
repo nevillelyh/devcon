@@ -6,4 +6,3 @@ services:
       - ${MARIADB_PORT}:3306
     environment:
       MARIADB_ROOT_PASSWORD: mariadbpass
-    command: --bind-address=0.0.0.0

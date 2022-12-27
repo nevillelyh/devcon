@@ -6,7 +6,6 @@ services:
       - ${MYSQL_PORT}:3306
     environment:
       MYSQL_ROOT_PASSWORD: mysqlpass
-    command: --bind-address=0.0.0.0
 
   mysql-init:
     image: mysql:latest
