@@ -6,3 +6,6 @@ services:
       - ${MARIADB_PORT}:3306
     environment:
       MARIADB_ROOT_PASSWORD: mariadbpass
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    user: "${UID}:${GID}"

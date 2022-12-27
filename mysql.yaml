@@ -6,6 +6,9 @@ services:
       - ${MYSQL_PORT}:3306
     environment:
       MYSQL_ROOT_PASSWORD: mysqlpass
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    user: "${UID}:${GID}"
 
   mysql-init:
     image: mysql:latest
