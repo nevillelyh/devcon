@@ -13,7 +13,7 @@ services:
       - cp-zookeeper
     hostname: cp-broker.devcon.io
     ports:
-      - ${CP_BROKER_PORT}:9092
+      - ${CP_BROKER_PORT}:${CP_BROKER_PORT}
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper.devcon.io:2181
