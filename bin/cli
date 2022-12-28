@@ -8,9 +8,9 @@ project="$(basename "$basedir")"
 net="${project}_default"
 ts=$(date "+%Y%m%d%H%M%S")
 
-run_cockroach() {
+run_cockroach-sql() {
     tag="cockroachdb/cockroach"
-    docker run -it --rm --name "cockroach-$ts" --network "$net" \
+    docker run -it --rm --name "cockroach-sql-$ts" --network "$net" \
         --user "$(id -u)" \
         --env HOME=/home/devcon \
         --workdir /home/devcon \
