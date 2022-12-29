@@ -1,15 +1,12 @@
-FROM azul/zulu-openjdk:8-latest
+FROM azul/zulu-openjdk-alpine:8-latest
 ARG hadoop_version=3.3.4
 ARG hive_version=3.1.3
 ARG mysql_version=8.0.31
 ARG postgres_version=42.5.0
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update
-RUN apt-get install -y curl procps
-RUN rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache bash curl procps
 
-RUN useradd -m -s /bin/bash metastore
+RUN adduser -D metastore
 RUN mkdir /apache
 RUN chown metastore /apache
 
