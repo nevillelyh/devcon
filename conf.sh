@@ -118,6 +118,9 @@ check_catalogs() {
                 if ! contains "metastore-$catalog" "${SERVICES_ARRAY[@]}"; then
                     error "$catalog catalog depends on metastore-$catalog service"
                 fi
+                if ! contains minio "${SERVICES_ARRAY[@]}"; then
+                    error "$catalog catalog depends on minio service"
+                fi
                 ;;
             *)
                 if ! contains "$catalog" "${SERVICES_ARRAY[@]}"; then
