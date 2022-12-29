@@ -5,16 +5,6 @@ set -euo pipefail
 bindir="$(dirname "$(readlink -f "$0")")"
 basedir="$(readlink -f "$bindir/..")"
 
-wait_for_log() {
-    container=$1
-    expected=$2
-    echo "[INFO] Waiting for container $container"
-    while ! docker logs "$container" 2>&1 | grep -q "$expected"; do
-        sleep 1
-    done
-    echo "[INFO] Container $container is up"
-}
-
 cd "$basedir"
 source conf.sh
 
