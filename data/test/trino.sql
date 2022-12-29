@@ -7,6 +7,7 @@ SELECT * FROM bigquery.samples.shakespeare LIMIT 1;
 SELECT * FROM cockroach_tpcc.public.district LIMIT 1;
 -- END cockroach
 
+-- BEGIN hive
 CREATE SCHEMA hive.tpch;
 CREATE TABLE hive.tpch.nation AS SELECT * FROM tpch.tiny.nation;
 SELECT * FROM hive.tpch.nation LIMIT 1;
