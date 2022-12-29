@@ -16,7 +16,10 @@ echo "[INFO] Setting up environment"
 "$bindir/wait" "${SERVICES_ARRAY[@]}"
 
 for catalog in "${TRINO_CATALOGS_ARRAY[@]}"; do
-    query="$(sed -n "/-- BEGIN $catalog/, /-- END $catalog/p" "$basedir/data/test/trino.sql" | grep -v "^--")"
+    query="$(sed -n "/-- BEGIN $catalog/, /-- END $catalog/p" "$basedir/data/test/trino.sql" | grep -v "^--" || true)"
+    if [[ -z "$query" ]]; then
+        echo "Missing tests for catalog: $catalog"
+    fi
     echo "[INFO] Testing catalog: $catalog"
     echo "$query"
     echo "============================================================"
