@@ -16,4 +16,4 @@ sleep 5
 cat /usr/share/confluent-hub-components/confluentinc-kafka-connect-datagen/etc/connector_users_protobuf.config | \
     sed 's@"value.converter.schema.registry.url": "http://localhost:8081",@"value.converter.schema.registry.url": "http://cp-schema-registry.devcon.io:8081",@' | \
     sed 's@"value.converter.schemas.enable": "false",@"value.converter.schemas.enable": "true",@' | \
-    curl -X POST -H "Content-Type: application/json" --data "@-" http://cp-connect.devcon.io:8083/connectors
+    curl -fsSL -X POST -H "Content-Type: application/json" --data "@-" http://cp-connect.devcon.io:8083/connectors
