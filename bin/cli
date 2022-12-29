@@ -31,6 +31,13 @@ run_cqlsh() {
         cqlsh scylla.devcon.io "$@"
 }
 
+run_elasticsearch-sql-cli() {
+    tag="docker.elastic.co/elasticsearch/elasticsearch:8.5.3"
+    docker run -it --rm --name "elasticsearch-sql-cli-$ts" --network "$net" \
+        "$tag" \
+        bin/elasticsearch-sql-cli http://elastic:elasticpass@elastic.devcon.io:9200 "$@"
+}
+
 run_kcat() {
     tag="edenhill/kcat:1.7.1"
     docker run -it --rm --name "kcat-$ts" --network=devcon_default \

@@ -2,10 +2,10 @@
 # shellcheck disable=SC2034
 
 # Override with SERVICES=service1,service2,...
-SERVICES_ARRAY=(cockroach kafka metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
+SERVICES_ARRAY=(cockroach elastic kafka metastore-hive metastore-iceberg mariadb minio mongo mysql postgres scylla trino)
 
 # Override with TRINO_CATALOGS=catalog1,catalog2,...
-TRINO_CATALOGS_ARRAY=(bigquery cockroach hive iceberg kafka mariadb mongo mysql postgres scylla)
+TRINO_CATALOGS_ARRAY=(bigquery cockroach elastic hive iceberg kafka mariadb mongo mysql postgres scylla)
 
 # Supported database types: derby, mysql, postgres
 export METASTORE_DBTYPE=${METASTORE_DBTYPE:-derby}
@@ -28,6 +28,8 @@ export CP_BROKER_PORT=${CP_BROKER_PORT:-9092}
 export CP_SCHEMA_REGISTRY_PORT=${CP_SCHEMA_REGISTRY_PORT:-8081}
 export CP_CONTROL_CENTER_PORT=${CP_CONTROL_CENTER_PORT:-9021}
 export CP_CONNECT_PORT=${CP_CONNECT_PORT:-8083}
+export ELASTIC_PORT=${ELASTIC_PORT:-9200}
+export KIBANA_PORT=${KIBANA_PORT:-5601}
 export MARIADB_PORT=${MARIADB_PORT:-3306}
 export METASTORE_HIVE_PORT=${METASTORE_HIVE_PORT:-9083}
 export METASTORE_ICEBERG_PORT=${METASTORE_ICEBERG_PORT:-9084}
