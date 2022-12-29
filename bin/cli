@@ -39,7 +39,7 @@ run_elasticsearch-sql-cli() {
 }
 
 run_kcat() {
-    tag="edenhill/kcat:1.7.1"
+    tag="nevillelyh/kcat:latest"
     docker run -it --rm --name "kcat-$ts" --network=devcon_default \
         "$tag" \
         -b cp-broker.devcon.io:29092 \
