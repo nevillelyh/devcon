@@ -19,6 +19,10 @@ CREATE TABLE iceberg.tpch.nation AS SELECT * FROM tpch.tiny.nation;
 SELECT * FROM iceberg.tpch.nation LIMIT 1;
 -- END iceberg
 
+-- BEGIN kafka
+SELECT * FROM kafka.default.users LIMIT 1;
+-- END kafka
+
 -- BEGIN mariadb
 CREATE SCHEMA mariadb.tpch;
 CREATE TABLE mariadb.tpch.nation AS SELECT * FROM tpch.tiny.nation;
