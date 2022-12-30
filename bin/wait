@@ -50,6 +50,13 @@ for service in "$@"; do
         cockroach|minio|mysql|postgres|scylla)
             wait_for_exit "$project-$service-init-1"
             ;;
+        kafka)
+            echo '[INFO] Waiting for Kafka topic "users"'
+            while [[ "$("$bindir/kcat" -L | grep -c 'topic "users"')" -ne 1 ]]; do
+                sleep 1
+            done
+            echo '[INFO] Kafka topic "users" is available'
+            ;;
         mariadb)
             wait_for_log "$project-$service-1" "mariadbd: ready for connections." 2
             ;;
