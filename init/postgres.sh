@@ -5,7 +5,7 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source /conf.sh
 
-[[ -f $HOME/init-complete ]] && exit 0
+[[ -f "$HOME/init-complete" ]] && exit 0
 
 /init/wait-for-it.sh postgres.devcon.io:5432 -s -t 0 -- echo "PostgreSQL is up"
 
