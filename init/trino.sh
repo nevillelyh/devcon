@@ -5,13 +5,6 @@ set -euo pipefail
 # shellcheck disable=SC1091
 source /conf.sh
 
-find /trino -type f -not -path "/trino/catalog/*" -print0 | while IFS= read -r -d $'\0' file; do
-    dest="/etc$file"
-    echo "Creating Trino configuration $dest"
-    mkdir -p "$(dirname "$dest")"
-    cp "$file" "$dest"
-done
-
 create_single() {
     catalog="$1"
     echo "Creating Trino catalog $catalog"
@@ -35,17 +28,39 @@ create_multi() {
     fi
 }
 
-for catalog in "${TRINO_CATALOGS_ARRAY[@]}"; do
-    case "$catalog" in
-        cockroach)
-            create_multi "$catalog" "${COCKROACH_DATABASES[@]}"
-            ;;
-        postgres)
-            create_multi "$catalog" "${POSTGRES_PUBLIC_DATABASES[@]}"
-            ;;
-        *) create_single "$catalog"
-            ;;
-    esac
-done
+init() {
+    find /trino -type f -not -path "/trino/catalog/*" -print0 | while IFS= read -r -d $'\0' file; do
+        dest="/etc$file"
+        echo "Creating Trino configuration $dest"
+        mkdir -p "$(dirname "$dest")"
+        cp "$file" "$dest"
+    done
+
+    for catalog in "${TRINO_CATALOGS_ARRAY[@]}"; do
+        case "$catalog" in
+            cockroach)
+                create_multi "$catalog" "${COCKROACH_DATABASES[@]}"
+                ;;
+            kafka)
+                echo "Installing Kafka Protobuf schema provider"
+                cd /usr/lib/trino/plugin/kafka
+                # shellcheck disable=SC2012
+                version=$(ls kafka-schema-registry-client-*.jar | sed 's/^kafka-schema-registry-client-\(.\+\).jar/\1/')
+                wget -nv "https://packages.confluent.io/maven/io/confluent/kafka-protobuf-provider/$version/kafka-protobuf-provider-$version.jar"
+                create_single "$catalog"
+                ;;
+            postgres)
+                create_multi "$catalog" "${POSTGRES_PUBLIC_DATABASES[@]}"
+                ;;
+            *) create_single "$catalog"
+                ;;
+        esac
+    done
+}
+
+if [[ ! -f "$HOME/init-complete" ]]; then
+    init
+    touch "$HOME/init-complete"
+fi
 
 /usr/lib/trino/bin/run-trino
