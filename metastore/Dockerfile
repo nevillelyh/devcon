@@ -13,12 +13,16 @@ RUN chown metastore /apache
 USER metastore
 
 WORKDIR /apache
-RUN curl -fsSL https://dlcdn.apache.org/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz | tar -C . -xz
-RUN mv hadoop-${hadoop_version} hadoop
-RUN curl -fsSL https://dlcdn.apache.org/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz | tar -C . -xz
-RUN mv apache-hive-${hive_version}-bin hive
-RUN curl -fsSL https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.0.31/mysql-connector-j-${mysql_version}.jar -o hive/lib/mysql-connector-j-${mysql_version}.jar
-RUN curl -fsSL https://jdbc.postgresql.org/download/postgresql-${postgres_version}.jar -o hive/lib/postgresql-${postgres_version}.jar
+RUN mkdir hadoop
+RUN curl -fsSL https://dlcdn.apache.org/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz | \
+    tar -C hadoop --strip-components 1 -xz
+RUN mkdir hive
+RUN curl -fsSL https://dlcdn.apache.org/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz | \
+    tar -C hive --strip-components 1 -xz
+RUN curl -fsSL https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.0.31/mysql-connector-j-${mysql_version}.jar \
+    -o hive/lib/mysql-connector-j-${mysql_version}.jar
+RUN curl -fsSL https://jdbc.postgresql.org/download/postgresql-${postgres_version}.jar \
+    -o hive/lib/postgresql-${postgres_version}.jar
 
 ENV HADOOP_HOME=/apache/hadoop
 ENV HIVE_HOME=/apache/hive
