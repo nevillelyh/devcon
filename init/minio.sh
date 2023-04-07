@@ -9,7 +9,7 @@ source /conf.sh
 
 mc alias set minio http://minio.devcon.io:9000 minioadmin minioadmin
 mc admin user add minio minio-key minio-secret
-mc admin policy set minio readwrite user=minio-key
+mc admin policy attach minio readwrite --user minio-key
 
 if [ -n "${MINIO_BUCKETS:-}" ]; then
     for bucket in "${MINIO_BUCKETS[@]}"; do
