@@ -46,7 +46,9 @@ init() {
                 cd /usr/lib/trino/plugin/kafka
                 # shellcheck disable=SC2012
                 version=$(ls kafka-schema-registry-client-*.jar | sed 's/^kafka-schema-registry-client-\(.\+\).jar/\1/')
-                wget -nv "https://packages.confluent.io/maven/io/confluent/kafka-protobuf-provider/$version/kafka-protobuf-provider-$version.jar"
+                for pkg in kafka-protobuf-provider kafka-protobuf-types; do
+                    wget -nv "https://packages.confluent.io/maven/io/confluent/$pkg/$version/$pkg-$version.jar"
+                done
                 create_single "$catalog"
                 ;;
             postgres)
