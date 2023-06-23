@@ -1,6 +1,6 @@
 services:
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
     hostname: elastic.devcon.io
     ports:
       - ${ELASTIC_PORT}:9200
@@ -12,7 +12,7 @@ services:
       - ./data/elastic:/usr/share/elasticsearch/data
 
   elastic-init:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
     depends_on:
       - elastic
     hostname: elastic-init.devcon.io
@@ -22,7 +22,7 @@ services:
     command: /init/elastic.sh
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.5.3
+    image: docker.elastic.co/kibana/kibana:8.8.1
     depends_on:
       - elastic
     hostname: kibana.devcon.io
